@@ -136,6 +136,17 @@
     .timeline-viewport {
       overflow: hidden;
       position: relative;
+      touch-action: pan-y;
+      cursor: grab;
+      scrollbar-width: none;
+    }
+
+    .timeline-viewport.dragging {
+      cursor: grabbing;
+    }
+
+    .timeline-viewport::-webkit-scrollbar {
+      display: none;
     }
 
     .timeline-track {
@@ -144,6 +155,13 @@
       width: max-content;
       padding-bottom: 4px;
       will-change: transform;
+    }
+
+    .timeline-cycle {
+      display: flex;
+      gap: 12px;
+      padding-right: 12px;
+      flex: 0 0 auto;
     }
 
     .timeline-item {
@@ -163,6 +181,8 @@
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
       position: relative;
       z-index: 1;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .timeline-item:nth-child(3) img {
@@ -482,12 +502,18 @@
   });
 
   const gapMarquee = 12;
-  const velocidadMarquee = 22;
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const velocidadMarquee = 0.09;
   let bolsaImagenes = [];
   let firmaAnterior = "";
-  let ultimoTiempo = null;
+  let cicloActualFirma = "";
+  let cicloAncho = 0;
+  let ultimaAnimacion = null;
   let desplazamiento = 0;
+  let arrastreActivo = false;
+  let arrastreInicioX = 0;
+  let arrastreInicioDesplazamiento = 0;
+  let pausaHasta = 0;
+  let resumeTimer = null;
 
   function mezclar(array) {
     const resultado = [...array];
@@ -514,6 +540,14 @@
     return bolsaImagenes.shift();
   }
 
+  function crearSecuenciaCiclo() {
+    const secuencia = [];
+    for (let i = 0; i < imagenes.length; i += 1) {
+      secuencia.push(siguienteImagen());
+    }
+    return secuencia;
+  }
+
   function crearElementoCarrusel(src) {
     const item = document.createElement("div");
     item.className = "timeline-item";
@@ -522,58 +556,149 @@
     img.src = src;
     img.alt = "Fotografia de la història";
     img.loading = "lazy";
+    img.draggable = false;
 
     item.appendChild(img);
     return item;
   }
 
-  function afegirImatge() {
-    timelineTrack.appendChild(crearElementoCarrusel(siguienteImagen()));
+  function crearCiclo(firmaAnteriorCiclo) {
+    let secuencia = mezclar(imagenes);
+    while (imagenes.length > 1 && secuencia.join("|") === firmaAnteriorCiclo) {
+      secuencia = mezclar(imagenes);
+    }
+
+    const ciclo = document.createElement("div");
+    ciclo.className = "timeline-cycle";
+    secuencia.forEach((src) => ciclo.appendChild(crearElementoCarrusel(src)));
+
+    return { ciclo, firma: secuencia.join("|") };
   }
 
-  function omplirCarrusel() {
-    while (timelineTrack.children.length < Math.min(12, imagenes.length)) {
-      afegirImatge();
-    }
+  function reconstruirCarrusel() {
+    timelineTrack.innerHTML = "";
+    const primer = crearCiclo(cicloActualFirma);
+    cicloActualFirma = primer.firma;
+    timelineTrack.appendChild(primer.ciclo);
 
-    while (timelineTrack.scrollWidth < timelineViewport.clientWidth * 2.15) {
-      afegirImatge();
-    }
+    const segon = crearCiclo(cicloActualFirma);
+    cicloActualFirma = segon.firma;
+    timelineTrack.appendChild(segon.ciclo);
+
+    cicloAncho = primer.ciclo.getBoundingClientRect().width + gapMarquee;
+    desplazamiento = 0;
+    aplicarDesplazamiento();
   }
 
-  function executarCarrusel(tempsActual) {
-    if (ultimoTiempo === null) {
-      ultimoTiempo = tempsActual;
-    }
-
-    const delta = (tempsActual - ultimoTiempo) / 1000;
-    ultimoTiempo = tempsActual;
-    desplazamiento -= velocidadMarquee * delta;
+  function aplicarDesplazamiento() {
     timelineTrack.style.transform = `translate3d(${desplazamiento}px, 0, 0)`;
+  }
 
-    const primerElemento = timelineTrack.firstElementChild;
-    if (primerElemento) {
-      const primerRect = primerElemento.getBoundingClientRect();
-      const viewportRect = timelineViewport.getBoundingClientRect();
+  function rotarCiclo() {
+    const primerCiclo = timelineTrack.firstElementChild;
+    if (!primerCiclo) return;
 
-      if (primerRect.right < viewportRect.left - gapMarquee) {
-        desplazamiento += primerRect.width + gapMarquee;
-        timelineTrack.style.transform = `translate3d(${desplazamiento}px, 0, 0)`;
-        primerElemento.remove();
-        afegirImatge();
-      }
+    primerCiclo.remove();
+    const nuevo = crearCiclo(cicloActualFirma);
+    cicloActualFirma = nuevo.firma;
+    timelineTrack.appendChild(nuevo.ciclo);
+    cicloAncho = primerCiclo.getBoundingClientRect().width + gapMarquee;
+  }
+
+  function limitarDesplazamiento() {
+    if (cicloAncho <= 0) return;
+
+    while (desplazamiento <= -cicloAncho) {
+      desplazamiento += cicloAncho;
+      rotarCiclo();
     }
 
-    requestAnimationFrame(executarCarrusel);
+    while (desplazamiento > 0) {
+      desplazamiento -= cicloAncho;
+    }
+
+    aplicarDesplazamiento();
+  }
+
+  function iniciarArrastre(event) {
+    if (event.button !== undefined && event.button !== 0) return;
+    arrastreActivo = true;
+    arrastreInicioX = event.clientX;
+    arrastreInicioDesplazamiento = desplazamiento;
+    pausaHasta = Number.POSITIVE_INFINITY;
+
+    if (resumeTimer !== null) {
+      clearTimeout(resumeTimer);
+      resumeTimer = null;
+    }
+
+    timelineViewport.classList.add("dragging");
+    timelineViewport.setPointerCapture?.(event.pointerId);
+  }
+
+  function moverArrastre(event) {
+    if (!arrastreActivo) return;
+    event.preventDefault();
+    const deltaX = event.clientX - arrastreInicioX;
+    desplazamiento = arrastreInicioDesplazamiento + deltaX;
+    limitarDesplazamiento();
+  }
+
+  function finalizarArrastre(event) {
+    if (!arrastreActivo) return;
+    arrastreActivo = false;
+    timelineViewport.classList.remove("dragging");
+
+    try {
+      timelineViewport.releasePointerCapture?.(event.pointerId);
+    } catch (error) {
+      // No-op.
+    }
+
+    pauseUp();
+  }
+
+  function pauseUp() {
+    pausaHasta = performance.now() + 250;
+    if (resumeTimer !== null) {
+      clearTimeout(resumeTimer);
+    }
+    resumeTimer = setTimeout(() => {
+      pausaHasta = 0;
+      resumeTimer = null;
+    }, 250);
   }
 
   rellenarBolsa();
-  omplirCarrusel();
-  window.addEventListener("resize", omplirCarrusel);
+  reconstruirCarrusel();
+  window.addEventListener("resize", reconstruirCarrusel);
 
-  if (!reduceMotion) {
-    requestAnimationFrame(executarCarrusel);
+  timelineViewport.addEventListener("pointerdown", iniciarArrastre);
+  window.addEventListener("pointermove", moverArrastre, { passive: false });
+  window.addEventListener("pointerup", finalizarArrastre);
+  window.addEventListener("pointercancel", finalizarArrastre);
+
+  function animarCarrusel(tempsActual) {
+    if (ultimaAnimacion === null) {
+      ultimaAnimacion = tempsActual;
+    }
+
+    const delta = tempsActual - ultimaAnimacion;
+    ultimaAnimacion = tempsActual;
+
+    if (!arrastreActivo && tempsActual >= pausaHasta) {
+      desplazamiento -= velocidadMarquee * delta;
+      if (cicloAncho > 0 && desplazamiento <= -cicloAncho) {
+        desplazamiento += cicloAncho;
+        rotarCiclo();
+      }
+      aplicarDesplazamiento();
+    }
+
+    requestAnimationFrame(animarCarrusel);
   }
+
+  requestAnimationFrame(animarCarrusel);
 
   const preguntes = [
     {
