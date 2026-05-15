@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La nostra història</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 120, 140, 0.24), transparent 32%),
+        linear-gradient(180deg, #121212 0%, #0d0d0d 100%);
+      color: #fff;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    header {
+      padding: 34px 20px 26px;
+      background: linear-gradient(135deg, #ff4e50 0%, #fc913a 100%);
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.22);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -55% auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      margin: 0 0 10px;
+      font-size: 0.82em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.92;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.3em;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      margin: 10px auto 0;
+      max-width: 32rem;
+      font-size: 1em;
+      opacity: 0.93;
+    }
+
+    #contador {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px auto 0;
+      padding: 12px 16px;
+      max-width: min(32rem, calc(100vw - 32px));
+      border-radius: 999px;
+      background: rgba(17, 17, 17, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 1.02em;
+      cursor: pointer;
+      user-select: none;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    #contador:hover {
+      transform: translateY(-1px);
+      background: rgba(17, 17, 17, 0.24);
+    }
+
+    #contador:active {
+      transform: translateY(0);
+    }
+
+    .contador-etiqueta {
+      font-size: 0.78em;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    .contador-valor {
+      font-weight: 700;
+    }
+
+    .timeline-wrap {
+      padding: 18px 0 8px;
+      overflow: hidden;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 8px 16px 18px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 50%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-50%);
+    }
+
+    .section-title {
+      margin: 0 16px 12px;
+      font-size: 1.25em;
+      text-align: center;
+    }
+
+    .timeline-viewport {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .timeline-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      padding-bottom: 4px;
+      will-change: transform;
+    }
+
+    .timeline-item {
+      flex: 0 0 auto;
+      width: clamp(150px, 42vw, 230px);
+    }
+
+    .timeline-item img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+      border-radius: 12px;
+      background: #222;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-item:nth-child(3) img {
+      object-position: 42% center;
+    }
+
+    .timeline-item img:hover {
+      transform: scale(1.05);
+    }
+
+    .panel {
+      max-width: 920px;
+      margin: 20px auto 0;
+      padding: 0 16px 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(10px);
+    }
+
+    .quiz-card {
+      text-align: left;
+    }
+
+    .quiz-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.35em;
+      text-align: center;
+    }
+
+    .quiz-card p {
+      margin: 0 0 16px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 0.92em;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .quiz-progress {
+      flex: 1;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .quiz-progress > div {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff4e50, #fc913a);
+      transition: width 0.25s ease;
+    }
+
+    .quiz-pregunta {
+      font-size: 1.15em;
+      margin: 0 0 14px;
+      text-align: center;
+    }
+
+    .quiz-opcions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .quiz-opcions button {
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      min-height: 48px;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .quiz-opcions button:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .quiz-opcions button.correcte {
+      background: rgba(77, 212, 137, 0.22);
+      box-shadow: 0 0 0 1px rgba(77, 212, 137, 0.28) inset;
+    }
+
+    .quiz-opcions button.erroni {
+      background: rgba(255, 78, 80, 0.22);
+      box-shadow: 0 0 0 1px rgba(255, 78, 80, 0.28) inset;
+    }
+
+    .quiz-accio {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .accio-secundaria {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .missatge-resultat {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 56px;
+      text-align: center;
+    }
+
+    button {
+      margin: 0;
+      padding: 15px 25px;
+      border: none;
+      border-radius: 8px;
+      background: #ff4e50;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      min-height: 48px;
+      max-width: 100%;
+    }
+
+    button:hover {
+      background: #fc913a;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .timeline-item img,
+      #contador,
+      button {
+        transition: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 24px 16px 20px;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .hero-subtitle {
+        font-size: 0.96em;
+      }
+
+      #contador {
+        font-size: 0.95em;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px 14px;
+      }
+
+      .contador-etiqueta {
+        font-size: 0.72em;
+      }
+
+      .timeline-wrap {
+        padding-top: 12px;
+      }
+
+      .timeline {
+        padding: 8px 12px 14px;
+      }
+
+      .timeline::before {
+        left: 12px;
+        right: 12px;
+      }
+
+      .timeline-item {
+        width: clamp(160px, 68vw, 240px);
+      }
+
+      .timeline-item img {
+        border-radius: 10px;
+      }
+
+      .panel {
+        padding: 0 12px 20px;
+      }
+
+      button {
+        width: 100%;
+        padding: 14px 18px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      .quiz-meta {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <p class="hero-kicker">Un recordatori en moviment</p>
+  <h1>La nostra història</h1>
+  <p class="hero-subtitle">Un petit espai amb fotos, temps compartit i un joc fet per tu.</p>
+  <div id="contador" role="button" tabindex="0" aria-label="Canviar la vista del comptador"></div>
+</header>
+
+<section class="timeline-wrap" aria-label="Línia del temps de fotos">
+  <h2 class="section-title">Línia del temps</h2>
+  <div class="timeline">
+    <div class="timeline-viewport">
+      <div class="timeline-track" id="timelineTrack"></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="card quiz-card" id="quizCard">
+    <h2>Joc de preguntes</h2>
+    <p>Tria les respostes i comprova quant de bé us coneixeu.</p>
+
+    <div class="quiz-meta">
+      <div>
+        <div id="quizPosicio">Pregunta 1 de 3</div>
+        <div class="quiz-progress" aria-hidden="true"><div id="quizBarra"></div></div>
+      </div>
+      <div id="quizPunts">0 punts</div>
+    </div>
+
+    <div id="quizPregunta" class="quiz-pregunta"></div>
+    <div id="quizOpcions" class="quiz-opcions"></div>
+
+    <div class="quiz-accio">
+      <button class="accio-secundaria" id="quizReiniciar" type="button">Reiniciar joc</button>
+    </div>
+
+    <div id="quizResultat" class="missatge-resultat" aria-live="polite"></div>
+  </div>
+</section>
+
+<script>
+  const inicio = new Date("2022-11-14T17:00:00");
+  const contador = document.getElementById("contador");
+  const unitatsContador = ["complet", "hores", "minuts", "segons"];
+  let modeContador = 0;
+
+  function actualizarContador() {
+    const ahora = new Date();
+    const diff = ahora - inicio;
+
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutos = Math.floor((diff / (1000 * 60)) % 60);
+
+    let valor = "";
+    let etiqueta = "";
+
+    if (unitatsContador[modeContador] === "complet") {
+      valor = `${dias} dies, ${horas} hores i ${minutos} minuts`;
+      etiqueta = "Temps junts";
+    } else if (unitatsContador[modeContador] === "hores") {
+      valor = `${Math.floor(diff / (1000 * 60 * 60))} hores`;
+      etiqueta = "Vista ràpida";
+    } else if (unitatsContador[modeContador] === "minuts") {
+      valor = `${Math.floor(diff / (1000 * 60))} minuts`;
+      etiqueta = "Vista detallada";
+    } else {
+      valor = `${Math.floor(diff / 1000)} segons`;
+      etiqueta = "En directe";
+    }
+
+    contador.innerHTML = `
+      <span class="contador-etiqueta">${etiqueta}</span>
+      <span class="contador-valor">${valor} ❤</span>
+    `;
+  }
+
+  setInterval(actualizarContador, 1000);
+  contador.addEventListener("click", () => {
+    modeContador = (modeContador + 1) % unitatsContador.length;
+    actualizarContador();
+  });
+  contador.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      modeContador = (modeContador + 1) % unitatsContador.length;
+      actualizarContador();
+    }
+  });
+
+  const timelineTrack = document.getElementById("timelineTrack");
+  const timelineViewport = document.querySelector(".timeline-viewport");
+  const imagenes = Array.from({ length: 40 }, (_, index) => {
+    const numero = String(index + 1).padStart(2, "0");
+    return `img/foto-${numero}.jpg`;
+  });
+
+  const gapMarquee = 12;
+  const velocidadMarquee = 22;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let bolsaImagenes = [];
+  let firmaAnterior = "";
+  let ultimoTiempo = null;
+  let desplazamiento = 0;
+
+  function mezclar(array) {
+    const resultado = [...array];
+    for (let i = resultado.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [resultado[i], resultado[j]] = [resultado[j], resultado[i]];
+    }
+    return resultado;
+  }
+
+  function rellenarBolsa() {
+    let intento = mezclar(imagenes);
+    while (imagenes.length > 1 && intento.join("|") === firmaAnterior) {
+      intento = mezclar(imagenes);
+    }
+    firmaAnterior = intento.join("|");
+    bolsaImagenes = intento;
+  }
+
+  function siguienteImagen() {
+    if (bolsaImagenes.length === 0) {
+      rellenarBolsa();
+    }
+    return bolsaImagenes.shift();
+  }
+
+  function crearElementoCarrusel(src) {
+    const item = document.createElement("div");
+    item.className = "timeline-item";
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Fotografia de la història";
+    img.loading = "lazy";
+
+    item.appendChild(img);
+    return item;
+  }
+
+  function afegirImatge() {
+    timelineTrack.appendChild(crearElementoCarrusel(siguienteImagen()));
+  }
+
+  function omplirCarrusel() {
+    while (timelineTrack.children.length < Math.min(12, imagenes.length)) {
+      afegirImatge();
+    }
+
+    while (timelineTrack.scrollWidth < timelineViewport.clientWidth * 2.15) {
+      afegirImatge();
+    }
+  }
+
+  function executarCarrusel(tempsActual) {
+    if (ultimoTiempo === null) {
+      ultimoTiempo = tempsActual;
+    }
+
+    const delta = (tempsActual - ultimoTiempo) / 1000;
+    ultimoTiempo = tempsActual;
+    desplazamiento -= velocidadMarquee * delta;
+    timelineTrack.style.transform = `translate3d(${desplazamiento}px, 0, 0)`;
+
+    const primerElemento = timelineTrack.firstElementChild;
+    if (primerElemento) {
+      const primerRect = primerElemento.getBoundingClientRect();
+      const viewportRect = timelineViewport.getBoundingClientRect();
+
+      if (primerRect.right < viewportRect.left - gapMarquee) {
+        desplazamiento += primerRect.width + gapMarquee;
+        timelineTrack.style.transform = `translate3d(${desplazamiento}px, 0, 0)`;
+        primerElemento.remove();
+        afegirImatge();
+      }
+    }
+
+    requestAnimationFrame(executarCarrusel);
+  }
+
+  rellenarBolsa();
+  omplirCarrusel();
+  window.addEventListener("resize", omplirCarrusel);
+
+  if (!reduceMotion) {
+    requestAnimationFrame(executarCarrusel);
+  }
+
+  const preguntes = [
+    {
+      pregunta: "On ens vam conèixer?",
+      opcions: ["A l'escola", "A la platja", "En un concert"],
+      correcta: 0,
+    },
+    {
+      pregunta: "Quin és el meu menjar preferit?",
+      opcions: ["Pizza", "Sushi", "Hamburguesa", "Pasta"],
+      correcta: 3,
+    },
+    {
+      pregunta: "Quin va ser el nostre primer viatge junts?",
+      opcions: ["Madrid", "Menorca", "París", "Roma"],
+      correcta: 1,
+    },
+  ];
+
+  const quizPregunta = document.getElementById("quizPregunta");
+  const quizOpcions = document.getElementById("quizOpcions");
+  const quizPosicio = document.getElementById("quizPosicio");
+  const quizBarra = document.getElementById("quizBarra");
+  const quizPunts = document.getElementById("quizPunts");
+  const quizResultat = document.getElementById("quizResultat");
+  const quizReiniciar = document.getElementById("quizReiniciar");
+
+  let preguntaActual = 0;
+  let punts = 0;
+  let respostaBloquejada = false;
+  let transicioFinal = null;
+
+  function renderQuiz() {
+    const pregunta = preguntes[preguntaActual];
+    quizPregunta.textContent = pregunta.pregunta;
+    quizOpcions.innerHTML = "";
+    quizPosicio.textContent = `Pregunta ${preguntaActual + 1} de ${preguntes.length}`;
+    quizBarra.style.width = `${(preguntaActual / preguntes.length) * 100}%`;
+    quizPunts.textContent = `${punts} punts`;
+    respostaBloquejada = false;
+
+    if (preguntaActual === 0 && punts === 0) {
+      quizResultat.textContent = "Escull una opció per començar.";
+    }
+
+    pregunta.opcions.forEach((opcio, index) => {
+      const boto = document.createElement("button");
+      boto.type = "button";
+      boto.textContent = opcio;
+      boto.addEventListener("click", () => respondre(index));
+      quizOpcions.appendChild(boto);
+    });
+  }
+
+  function respondre(index) {
+    if (respostaBloquejada) return;
+    respostaBloquejada = true;
+
+    const pregunta = preguntes[preguntaActual];
+    const botons = [...quizOpcions.querySelectorAll("button")];
+
+    botons.forEach((element, i) => {
+      element.disabled = true;
+      if (i === pregunta.correcta) element.classList.add("correcte");
+      if (i === index && i !== pregunta.correcta) element.classList.add("erroni");
+    });
+
+    if (index === pregunta.correcta) {
+      punts += 1;
+      quizResultat.textContent = "Correcte. Bona memòria.";
+    } else {
+      quizResultat.textContent = `No és aquesta. La resposta correcta era "${pregunta.opcions[pregunta.correcta]}".`;
+    }
+
+    quizPunts.textContent = `${punts} punts`;
+
+    setTimeout(() => {
+      preguntaActual += 1;
+      if (preguntaActual < preguntes.length) {
+        renderQuiz();
+      } else {
+        quizPregunta.textContent = "Joc acabat";
+        quizOpcions.innerHTML = "";
+        quizPosicio.textContent = "Resultat final";
+        quizBarra.style.width = "100%";
+        quizResultat.textContent =
+          punts === preguntes.length
+            ? "Puntuació perfecta. Tens una sorpresa esperant-te."
+            : `Has encertat ${punts} de ${preguntes.length}. No està gens malament.`;
+
+        if (transicioFinal !== null) {
+          clearTimeout(transicioFinal);
+        }
+
+        transicioFinal = setTimeout(() => {
+          window.location.href = `premi.html?score=${punts}&total=${preguntes.length}`;
+        }, 1100);
+      }
+    }, 700);
+  }
+
+  function reiniciarQuiz() {
+    if (transicioFinal !== null) {
+      clearTimeout(transicioFinal);
+      transicioFinal = null;
+    }
+
+    preguntaActual = 0;
+    punts = 0;
+    quizBarra.style.width = "0%";
+    quizResultat.textContent = "Escull una opció per començar.";
+    renderQuiz();
+  }
+
+  quizReiniciar.addEventListener("click", reiniciarQuiz);
+
+  renderQuiz();
+  actualizarContador();
+</script>
+
+<!--
+Missatge secret:
+Si estàs llegint això... t'estimo més del que les paraules poden explicar ❤
+-->
+
+</body>
+</html>

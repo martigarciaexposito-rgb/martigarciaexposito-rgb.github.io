@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premi desbloquejat | Magma Girona</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root { color-scheme: dark; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255, 78, 80, 0.18), transparent 28%),
+        linear-gradient(180deg, #090909 0%, #121212 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 76vh;
+      background:
+        linear-gradient(180deg, rgba(8, 8, 8, 0.2) 0%, rgba(8, 8, 8, 0.88) 100%),
+        linear-gradient(135deg, #171717 0%, #101010 48%, #0c0c0c 100%);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 80%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ff4e50, #fc913a);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 30px;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      line-height: 0.95;
+    }
+
+    .lede {
+      margin: 14px 0 0;
+      max-width: 44rem;
+      font-size: 1.04rem;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+
+    .voucher {
+      height: 100%;
+      padding: 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .voucher::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .voucher-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .voucher-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .voucher-badge {
+      min-width: 92px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 78, 80, 0.18), rgba(252, 145, 58, 0.18));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 380px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #111;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+    }
+
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.32) 100%);
+      pointer-events: none;
+    }
+
+    .hero-visual-caption {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      z-index: 1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(10, 10, 10, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-visual-caption strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.96rem;
+    }
+
+    .hero-visual-caption span {
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .voucher-body {
+      position: relative;
+      z-index: 1;
+      padding: 4px 0 0;
+    }
+
+    .voucher-body .name {
+      margin: 0;
+      font-size: 1.15rem;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .voucher-body .place {
+      margin: 8px 0 0;
+      color: rgba(255, 255, 255, 0.76);
+      line-height: 1.5;
+    }
+
+    .voucher-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      align-content: end;
+    }
+
+    .voucher-box {
+      min-height: 100px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .voucher-box span {
+      display: block;
+    }
+
+    .voucher-box .small {
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .voucher-box .big {
+      font-size: 0.98rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.88);
+      font-weight: 600;
+    }
+
+    .page {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 34px;
+    }
+
+    .section {
+      margin-top: 14px;
+      padding: 18px 0 0;
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+      letter-spacing: 0.01em;
+    }
+
+    .section p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.55;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      padding: 18px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .stat .kpi {
+      display: block;
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat span:last-child {
+      color: rgba(255, 255, 255, 0.76);
+      line-height: 1.4;
+      display: block;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .feature {
+      padding: 18px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .feature p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      padding: 18px 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .list {
+      margin: 0;
+      padding-left: 18px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: 0;
+      font-size: 0.98rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .button.primary {
+      background: linear-gradient(90deg, #ff4e50, #fc913a);
+      color: #fff;
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .fineprint {
+      margin-top: 14px;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .hero-layout { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .feature-grid, .split { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .hero { min-height: 68vh; }
+      .hero-content, .page { width: calc(100% - 24px); }
+      .hero-content { padding: 28px 0 22px; }
+      h1 { max-width: 100%; }
+      .hero-visual { min-height: 280px; }
+      .voucher-columns { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero" aria-label="Premi Magma">
+    <div class="hero-content">
+      <div class="hero-layout">
+        <div>
+          <p class="eyebrow">Premi desbloquejat</p>
+          <h1>Una experiència a Magma de Girona</h1>
+          <p class="lede">Aquest regal no és un simple val. És una sortida pensada per desconnectar en un centre lúdic termal amb zona termal, Oasi, Magma Kids i opcions de restauració i allotjament a prop, tal com descriu la web oficial de Magma.</p>
+          <div class="meta-row">
+            <div class="pill" id="scorePill">Resultat del joc</div>
+            <div class="pill">Santa Coloma de Farners</div>
+            <div class="pill">Cheque regal oficial</div>
+          </div>
+        </div>
+
+        <aside class="voucher" aria-label="Vista del regal">
+          <div class="voucher-top">
+            <div class="voucher-label">Cheque regalo</div>
+            <div class="voucher-badge">Magma</div>
+          </div>
+
+          <div class="hero-visual">
+            <img src="img/magma-premi-hero.jpg" alt="Interior termal de Magma amb arquitectura central i aigua tranquil·la">
+            <div class="hero-visual-caption">
+              <strong>La imatge que millor funciona</strong>
+              <span>La composició centrada dona més sensació de premi i aguanta millor la cabecera.</span>
+            </div>
+          </div>
+
+          <div class="voucher-body">
+            <p class="name">Regala una experiència termal real</p>
+            <p class="place">Zona termal, Oasi, Magma Kids i una escapada pensada per relaxar-se de veritat.</p>
+          </div>
+
+          <div class="voucher-columns">
+            <div class="voucher-box">
+              <span class="small">Lloc</span>
+              <span class="big">Santa Coloma de Farners</span>
+            </div>
+            <div class="voucher-box">
+              <span class="small">Validesa</span>
+              <span class="big">1 any des de la compra</span>
+            </div>
+            <div class="voucher-box">
+              <span class="small">Contacte</span>
+              <span class="big">972 843 535</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <main class="page">
+    <section class="section" aria-labelledby="resum-title">
+      <h2 id="resum-title">El premi</h2>
+      <p id="resultText">Has completat el joc i has desbloquejat una experiència termal real. La idea és clara: regalar temps, relax i una visita a Magma amb un context que es senti cuidat.</p>
+    </section>
+
+    <section class="stats" aria-label="Dades principals de Magma">
+      <div class="stat">
+        <span class="kpi">32-35 C</span>
+        <span>Temperatura de l'aigua termal a la zona principal.</span>
+      </div>
+      <div class="stat">
+        <span class="kpi">75-90 C</span>
+        <span>Calor seca a la sauna garden de l'Oasi.</span>
+      </div>
+      <div class="stat">
+        <span class="kpi">1 any</span>
+        <span>Validesa del xec regal des de la compra.</span>
+      </div>
+      <div class="stat">
+        <span class="kpi">972 843 535</span>
+        <span>Telèfon oficial de Magma per confirmar reserves.</span>
+      </div>
+    </section>
+
+    <section class="feature-grid" aria-label="Què inclou">
+      <article class="feature">
+        <h3>Zona termal</h3>
+        <p>Spas interiors i exteriors, riu contra corrent, bancs de bombolles, llits d'hidromassatge, piscines i jacuzzis elevats.</p>
+      </article>
+      <article class="feature">
+        <h3>Oasi</h3>
+        <p>Sauna garden, hammam, pou de gel i dutxes de contrast per donar-li al regal un punt més especial i complet.</p>
+      </article>
+      <article class="feature">
+        <h3>Magma Kids i més</h3>
+        <p>Espai termal per a infants petits, restaurant Magnatum, allotjament a prop i opcions de spa més completes.</p>
+      </article>
+    </section>
+
+    <section class="split" aria-label="Com es fa servir">
+      <article class="panel">
+        <h3>Com s'utilitza</h3>
+        <ul class="list">
+          <li>El xec regal té una validesa d'un any des de la compra.</li>
+          <li>Cal confirmar la reserva amb el número de referència.</li>
+          <li>La recepció demana el xec i el DNI en arribar.</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>On és</h3>
+        <p>MAGMA Centre Lúdic Termal està situat a Santa Coloma de Farners, a la zona de Girona. És una escapada de benestar amb un entorn natural i una proposta pensada per a relaxar-se de veritat.</p>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="actions">
+        <a class="button primary" href="https://www.magma-cat.com/es/" target="_blank" rel="noreferrer">Obrir web oficial</a>
+        <a class="button secondary" href="index.html">Tornar a la pàgina principal</a>
+      </div>
+      <p class="fineprint">Informació resumida a partir de la web oficial de Magma. Si la compra s'ha de fer servir de manera real, convé validar disponibilitat, horaris i condicions directament amb el centre abans de reservar.</p>
+    </section>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const score = Number(params.get("score"));
+    const total = Number(params.get("total"));
+
+    const scorePill = document.getElementById("scorePill");
+    const resultText = document.getElementById("resultText");
+
+    if (Number.isFinite(score) && Number.isFinite(total) && total > 0) {
+      scorePill.textContent = `Has encertat ${score} de ${total}`;
+      resultText.textContent =
+        score === total
+          ? "Puntuació perfecta. El premi queda desbloquejat: una experiència a Magma de Girona."
+          : `Has tancat el joc amb ${score} encerts de ${total}. El regal continua sent una experiència completa i real.`;
+    } else {
+      scorePill.textContent = "Premi obert";
+      resultText.textContent = "No s'ha rebut cap resultat del joc, però el premi continua obert.";
+    }
+  </script>
+</body>
+</html>
