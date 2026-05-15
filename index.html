@@ -598,11 +598,12 @@
     const primerCiclo = timelineTrack.firstElementChild;
     if (!primerCiclo) return;
 
+    const anchoCiclo = primerCiclo.getBoundingClientRect().width + gapMarquee;
     primerCiclo.remove();
     const nuevo = crearCiclo(cicloActualFirma);
     cicloActualFirma = nuevo.firma;
     timelineTrack.appendChild(nuevo.ciclo);
-    cicloAncho = primerCiclo.getBoundingClientRect().width + gapMarquee;
+    cicloAncho = anchoCiclo;
   }
 
   function limitarDesplazamiento() {
