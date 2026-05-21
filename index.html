@@ -11,57 +11,110 @@
 
     :root {
       color-scheme: dark;
+      --bg-0: #fff8ef;
+      --bg-1: #ffe9d7;
+      --surface: rgba(255, 255, 255, 0.72);
+      --surface-strong: rgba(255, 255, 255, 0.88);
+      --surface-border: rgba(130, 86, 68, 0.14);
+      --text: #4a2f2a;
+      --muted: rgba(74, 47, 42, 0.76);
+      --accent: #ff7a59;
+      --accent-2: #ffbf6b;
+      --shadow: 0 18px 46px rgba(124, 74, 52, 0.18);
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: "Trebuchet MS", "Aptos", "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, rgba(255, 120, 140, 0.24), transparent 32%),
-        linear-gradient(180deg, #121212 0%, #0d0d0d 100%);
-      color: #fff;
+        radial-gradient(circle at top left, rgba(255, 170, 130, 0.36), transparent 26%),
+        radial-gradient(circle at 88% 12%, rgba(255, 208, 144, 0.28), transparent 22%),
+        linear-gradient(180deg, #fff9f2 0%, #fff0e5 42%, #ffe6d8 100%);
+      color: var(--text);
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.55;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent 78%);
+      opacity: 0.12;
     }
 
     header {
-      padding: 34px 20px 26px;
-      background: linear-gradient(135deg, #ff4e50 0%, #fc913a 100%);
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.22);
       position: relative;
+      isolation: isolate;
       overflow: hidden;
+      padding: 34px 20px 28px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 204, 150, 0.5), transparent 34%),
+        linear-gradient(180deg, #fff4e7 0%, #ffe4d1 62%, #ffd7c0 100%);
+      border-bottom: 0;
+      box-shadow: none;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.45), transparent 42%);
+      pointer-events: none;
     }
 
     header::after {
       content: "";
       position: absolute;
-      inset: auto -20% -55% auto;
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
+      inset: auto 0 -1px;
+      height: 1px;
+      background: rgba(74, 47, 42, 0.08);
       pointer-events: none;
     }
 
     .hero-kicker {
-      margin: 0 0 10px;
-      font-size: 0.82em;
-      letter-spacing: 0.12em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(124, 74, 52, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 0.74em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      opacity: 0.92;
+      color: rgba(74, 47, 42, 0.84);
+      backdrop-filter: blur(14px);
     }
 
     h1 {
       margin: 0;
-      font-size: 2.3em;
-      line-height: 1.1;
+      max-width: 11ch;
+      margin-inline: auto;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.045em;
+      text-shadow: 0 10px 22px rgba(255, 255, 255, 0.35);
     }
 
     .hero-subtitle {
-      margin: 10px auto 0;
-      max-width: 32rem;
-      font-size: 1em;
-      opacity: 0.93;
+      margin: 12px auto 0;
+      max-width: 34rem;
+      font-size: 0.98em;
+      color: var(--muted);
     }
 
     #contador {
@@ -70,22 +123,23 @@
       justify-content: center;
       gap: 10px;
       margin: 16px auto 0;
-      padding: 12px 16px;
-      max-width: min(32rem, calc(100vw - 32px));
+      padding: 12px 18px;
+      max-width: min(34rem, calc(100vw - 32px));
       border-radius: 999px;
-      background: rgba(17, 17, 17, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 244, 235, 0.92));
+      border: 1px solid rgba(124, 74, 52, 0.12);
       font-size: 1.02em;
       cursor: pointer;
       user-select: none;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
-      transition: transform 0.2s ease, background 0.2s ease;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 34px rgba(124, 74, 52, 0.14);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     #contador:hover {
-      transform: translateY(-1px);
-      background: rgba(17, 17, 17, 0.24);
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 240, 0.98));
+      box-shadow: 0 22px 42px rgba(124, 74, 52, 0.18);
     }
 
     #contador:active {
@@ -93,10 +147,10 @@
     }
 
     .contador-etiqueta {
-      font-size: 0.78em;
+      font-size: 0.76em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0.8;
+      letter-spacing: 0.12em;
+      opacity: 0.82;
       white-space: nowrap;
     }
 
@@ -105,15 +159,15 @@
     }
 
     .timeline-wrap {
-      padding: 18px 0 8px;
+      padding: 12px 0 8px;
       overflow: hidden;
     }
 
     .timeline {
       position: relative;
-      max-width: 1100px;
+      max-width: 1160px;
       margin: 0 auto;
-      padding: 8px 16px 18px;
+      padding: 6px 16px 18px;
     }
 
     .timeline::before {
@@ -122,23 +176,26 @@
       left: 16px;
       right: 16px;
       top: 50%;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.14);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(124, 74, 52, 0.12) 10%, rgba(255, 122, 89, 0.28) 50%, rgba(124, 74, 52, 0.12) 90%, transparent);
       transform: translateY(-50%);
     }
 
     .section-title {
       margin: 0 16px 12px;
-      font-size: 1.25em;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.25rem, 2vw, 1.6rem);
       text-align: center;
     }
 
     .timeline-viewport {
       overflow: hidden;
       position: relative;
+      padding: 4px 4px 12px;
       touch-action: pan-y;
       cursor: grab;
       scrollbar-width: none;
+      mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
     }
 
     .timeline-viewport.dragging {
@@ -151,7 +208,7 @@
 
     .timeline-track {
       display: flex;
-      gap: 12px;
+      gap: 18px;
       width: max-content;
       padding-bottom: 4px;
       will-change: transform;
@@ -159,14 +216,14 @@
 
     .timeline-cycle {
       display: flex;
-      gap: 12px;
-      padding-right: 12px;
+      gap: 18px;
+      padding-right: 18px;
       flex: 0 0 auto;
     }
 
     .timeline-item {
       flex: 0 0 auto;
-      width: clamp(150px, 42vw, 230px);
+      width: clamp(170px, 44vw, 260px);
     }
 
     .timeline-item img {
@@ -175,14 +232,16 @@
       object-fit: cover;
       object-position: center center;
       display: block;
-      border-radius: 12px;
-      background: #222;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+      border-radius: 24px;
+      background: #fff;
+      border: 1px solid rgba(124, 74, 52, 0.12);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+      box-shadow: 0 18px 42px rgba(124, 74, 52, 0.16);
       position: relative;
       z-index: 1;
       user-select: none;
       -webkit-user-drag: none;
+      filter: saturate(1.1) contrast(1.04);
     }
 
     .timeline-item:nth-child(3) img {
@@ -190,22 +249,34 @@
     }
 
     .timeline-item img:hover {
-      transform: scale(1.05);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 24px 54px rgba(124, 74, 52, 0.22);
+      filter: saturate(1.18) contrast(1.08);
     }
 
     .panel {
-      max-width: 920px;
-      margin: 20px auto 0;
-      padding: 0 16px 24px;
+      max-width: 960px;
+      margin: 14px auto 0;
+      padding: 0 16px 28px;
     }
 
     .card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 248, 240, 0.94) 100%);
+      border: 1px solid rgba(124, 74, 52, 0.1);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255, 122, 89, 0.1), transparent 34%);
+      pointer-events: none;
     }
 
     .quiz-card {
@@ -213,86 +284,102 @@
     }
 
     .quiz-card h2 {
-      margin: 0 0 8px;
-      font-size: 1.35em;
+      position: relative;
+      z-index: 1;
+      margin: 0 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 2vw, 1.8rem);
       text-align: center;
     }
 
     .quiz-card p {
-      margin: 0 0 16px;
+      position: relative;
+      z-index: 1;
+      margin: 0 0 18px;
       text-align: center;
-      color: rgba(255, 255, 255, 0.82);
+      color: var(--muted);
     }
 
     .quiz-meta {
+      position: relative;
+      z-index: 1;
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 14px;
-      font-size: 0.92em;
-      color: rgba(255, 255, 255, 0.78);
+      margin-bottom: 16px;
+      font-size: 0.93em;
+      color: rgba(74, 47, 42, 0.8);
     }
 
     .quiz-progress {
       flex: 1;
-      height: 8px;
+      height: 10px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(124, 74, 52, 0.1);
       overflow: hidden;
-      margin-top: 6px;
+      margin-top: 8px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.22);
     }
 
     .quiz-progress > div {
       height: 100%;
       width: 0;
       border-radius: inherit;
-      background: linear-gradient(90deg, #ff4e50, #fc913a);
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
       transition: width 0.25s ease;
     }
 
     .quiz-pregunta {
-      font-size: 1.15em;
-      margin: 0 0 14px;
+      position: relative;
+      z-index: 1;
+      font-size: 1.2em;
+      margin: 4px 0 16px;
       text-align: center;
     }
 
     .quiz-opcions {
+      position: relative;
+      z-index: 1;
       display: grid;
       grid-template-columns: 1fr;
-      gap: 10px;
+      gap: 12px;
     }
 
     .quiz-opcions button {
       text-align: left;
       width: 100%;
       margin: 0;
-      padding: 14px 16px;
-      border: none;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
+      padding: 16px 18px;
+      border: 1px solid rgba(124, 74, 52, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
       font-size: 1em;
       cursor: pointer;
-      min-height: 48px;
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      min-height: 54px;
+      transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      box-shadow: 0 10px 22px rgba(124, 74, 52, 0.12);
     }
 
     .quiz-opcions button:hover {
-      background: rgba(255, 255, 255, 0.14);
-      transform: translateY(-1px);
+      background: rgba(255, 247, 240, 1);
+      transform: translateY(-2px);
+      border-color: rgba(255, 122, 89, 0.22);
     }
 
     .quiz-opcions button.correcte {
-      background: rgba(77, 212, 137, 0.22);
-      box-shadow: 0 0 0 1px rgba(77, 212, 137, 0.28) inset;
+      background: rgba(125, 211, 193, 0.2);
+      box-shadow: 0 0 0 1px rgba(125, 211, 193, 0.28) inset;
     }
 
     .quiz-opcions button.erroni {
-      background: rgba(255, 78, 80, 0.22);
-      box-shadow: 0 0 0 1px rgba(255, 78, 80, 0.28) inset;
+      background: rgba(255, 140, 140, 0.2);
+      box-shadow: 0 0 0 1px rgba(255, 140, 140, 0.28) inset;
     }
 
     .quiz-accio {
+      position: relative;
+      z-index: 1;
       display: flex;
       justify-content: center;
       gap: 10px;
@@ -301,14 +388,17 @@
 
     .accio-secundaria {
       background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
     }
 
     .missatge-resultat {
+      position: relative;
+      z-index: 1;
       margin-top: 16px;
       padding: 14px 16px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(124, 74, 52, 0.1);
       min-height: 56px;
       text-align: center;
     }
@@ -317,23 +407,35 @@
       margin: 0;
       padding: 15px 25px;
       border: none;
-      border-radius: 8px;
-      background: #ff4e50;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
       color: white;
       font-size: 1em;
       cursor: pointer;
       min-height: 48px;
       max-width: 100%;
+      box-shadow: 0 14px 32px rgba(255, 122, 89, 0.22);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
     }
 
     button:hover {
-      background: #fc913a;
+      transform: translateY(-1px);
+      box-shadow: 0 18px 38px rgba(255, 122, 89, 0.26);
+      filter: brightness(1.03);
+    }
+
+    button:focus-visible,
+    #contador:focus-visible,
+    .quiz-opcions button:focus-visible {
+      outline: 2px solid rgba(255, 207, 138, 0.8);
+      outline-offset: 3px;
     }
 
     @media (prefers-reduced-motion: reduce) {
       .timeline-item img,
       #contador,
-      button {
+      button,
+      .quiz-opcions button {
         transition: none;
       }
     }
@@ -344,7 +446,7 @@
       }
 
       h1 {
-        font-size: 1.8em;
+        font-size: 2rem;
       }
 
       .hero-subtitle {
@@ -352,14 +454,14 @@
       }
 
       #contador {
-        font-size: 0.95em;
+        font-size: 0.94em;
         flex-direction: column;
         gap: 4px;
         padding: 12px 14px;
       }
 
       .contador-etiqueta {
-        font-size: 0.72em;
+        font-size: 0.7em;
       }
 
       .timeline-wrap {
@@ -376,11 +478,11 @@
       }
 
       .timeline-item {
-        width: clamp(160px, 68vw, 240px);
+        width: clamp(180px, 70vw, 250px);
       }
 
       .timeline-item img {
-        border-radius: 10px;
+        border-radius: 20px;
       }
 
       .panel {
@@ -393,7 +495,7 @@
       }
 
       .card {
-        padding: 16px;
+        padding: 18px;
       }
 
       .quiz-meta {
