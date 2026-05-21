@@ -192,7 +192,7 @@
       overflow: hidden;
       position: relative;
       padding: 4px 4px 12px;
-      touch-action: pan-y;
+      touch-action: pan-y pinch-zoom;
       cursor: grab;
       scrollbar-width: none;
       mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
@@ -598,8 +598,8 @@
 
   const timelineTrack = document.getElementById("timelineTrack");
   const timelineViewport = document.querySelector(".timeline-viewport");
-  const imagenes = Array.from({ length: 40 }, (_, index) => {
-    const numero = String(index + 1).padStart(2, "0");
+  const imagenes = Array.from({ length: 515 }, (_, index) => {
+    const numero = String(index + 1).padStart(3, "0");
     return `img/foto-${numero}.jpg`;
   });
 
@@ -612,7 +612,10 @@
   let ultimaAnimacion = null;
   let desplazamiento = 0;
   let arrastreActivo = false;
+  let gestoPendiente = false;
+  let arrastrePointerId = null;
   let arrastreInicioX = 0;
+  let arrastreInicioY = 0;
   let arrastreInicioDesplazamiento = 0;
   let pausaHasta = 0;
   let resumeTimer = null;
@@ -725,31 +728,59 @@
 
   function iniciarArrastre(event) {
     if (event.button !== undefined && event.button !== 0) return;
-    arrastreActivo = true;
+    if (event.isPrimary === false) return;
+
+    gestoPendiente = true;
+    arrastreActivo = false;
+    arrastrePointerId = event.pointerId;
     arrastreInicioX = event.clientX;
+    arrastreInicioY = event.clientY;
     arrastreInicioDesplazamiento = desplazamiento;
-    pausaHasta = Number.POSITIVE_INFINITY;
-
-    if (resumeTimer !== null) {
-      clearTimeout(resumeTimer);
-      resumeTimer = null;
-    }
-
-    timelineViewport.classList.add("dragging");
-    timelineViewport.setPointerCapture?.(event.pointerId);
   }
 
   function moverArrastre(event) {
-    if (!arrastreActivo) return;
-    event.preventDefault();
+    if (!gestoPendiente || event.pointerId !== arrastrePointerId) return;
+
     const deltaX = event.clientX - arrastreInicioX;
+    const deltaY = event.clientY - arrastreInicioY;
+
+    if (!arrastreActivo) {
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+
+      if (absY > 8 && absY > absX) {
+        finalizarArrastre(event, false);
+        return;
+      }
+
+      if (absX < 8 || absX < absY * 1.2) return;
+
+      arrastreActivo = true;
+      pausaHasta = Number.POSITIVE_INFINITY;
+
+      if (resumeTimer !== null) {
+        clearTimeout(resumeTimer);
+        resumeTimer = null;
+      }
+
+      timelineViewport.classList.add("dragging");
+      timelineViewport.setPointerCapture?.(event.pointerId);
+    }
+
+    event.preventDefault();
     desplazamiento = arrastreInicioDesplazamiento + deltaX;
     limitarDesplazamiento();
   }
 
-  function finalizarArrastre(event) {
-    if (!arrastreActivo) return;
+  function finalizarArrastre(event, reanudar = true) {
+    if (event?.pointerId !== undefined && arrastrePointerId !== null && event.pointerId !== arrastrePointerId) return;
+
+    if (!gestoPendiente && !arrastreActivo) return;
+
+    const habiaArrastre = arrastreActivo;
+    gestoPendiente = false;
     arrastreActivo = false;
+    arrastrePointerId = null;
     timelineViewport.classList.remove("dragging");
 
     try {
@@ -758,7 +789,9 @@
       // No-op.
     }
 
-    pauseUp();
+    if (habiaArrastre && reanudar) {
+      pauseUp();
+    }
   }
 
   function pauseUp() {
